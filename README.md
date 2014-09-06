@@ -6,7 +6,7 @@ P2Pool Server Node software for Scrypt-N coins. Currently supported:
 * Spaincoin [SPA]
 * Rotocoin [RT2]
 * Kimocoin [KMC]
-
+* Candycoin [YUM]
 
 Requirements:
 -------------------------
@@ -124,6 +124,9 @@ Kimocoin:
 * Run P2Pool with the "--net kimocoin" option.
 * Run your miner program, connecting to 127.0.0.1 on port 2891.
 
+Candycoun: 
+* Run P2Pool with the "--net candycoin" option.
+* Run your miner program, connecting to 127.0.0.1 on port 6151.
 
 Sponsors:
 -------------------------
