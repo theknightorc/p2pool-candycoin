@@ -62,7 +62,7 @@ nets = dict(
         MAX_TARGET=2**256//2**20 - 1,
         PERSIST=False,
         WORKER_PORT=6151,
-        BOOTSTRAP_ADDRS='192.168.0.51 192.168.0.52'.split(' '),
+        BOOTSTRAP_ADDRS='candyp2pool-east.dprcoin.com candyp2pool-west.dprcoin.com'.split(' '),
         ANNOUNCE_CHANNEL='#p2pool-yum',
         VERSION_CHECK=lambda v: True,
     ),
