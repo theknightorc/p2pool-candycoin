@@ -137,7 +137,7 @@ nets = dict(
             'candycoinaddress' in (yield bitcoind.rpc_help()) and
             not (yield bitcoind.rpc_getinfo())['testnet']
         )),
-        SUBSIDY_FUNC=lambda height: 10*100000000 >> (height + 1)//5256000,
+        SUBSIDY_FUNC=lambda height: 10*100000000 >> (height + 1)//1051200,
         POW_FUNC=lambda data: pack.IntType(256).unpack(__import__('ltc_scrypt').getPoWHash(data)),
         BLOCK_PERIOD=60, # s
         SYMBOL='YUM',
