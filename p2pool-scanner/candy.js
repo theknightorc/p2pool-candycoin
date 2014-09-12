@@ -54,18 +54,22 @@ function Scanner(options) {
             +"a:visited { text-decoration: none; color: #0051AD; }"
             +"a:hover { text-decoration: none; color: #F04800; }"
             +".row-grey { background-color: #f3f3f3;  }"
-            +".p2p {  width: 900px; margin: auto; border: 1px solid #aaa;  box-shadow: 2px 2px 2px #aaa; padding: 2px;  }"
-            +".p2p-row { width: 880px; padding: 10px; height: 26px; }"
-            +".p2p-caption { width: 880px; text-align: center;  background-color: #ddd; padding-top: 4px; padding-bottom: 8px;}"
+            +".p2p {  width: 1000px; margin: auto; border: 1px solid #aaa;  box-shadow: 2px 2px 2px #aaa; padding: 2px;  }"
+            +".p2p-row { width: 980px; padding: 10px; height: 26px; }"
+            +".p2p-caption { width: 980px; text-align: center;  background-color: #ddd; padding-top: 4px; padding-bottom: 8px;}"
             +".p2p div { float : left; }"
-            +".p2p-ip { width: 280px; text-align:left; }"
-            +".p2p-ip2 { width: 275px; text-align:left; }"
-            +".p2p-fee { width: 170px; text-align: center;}"
-            +".p2p-fee2 { margin-left: 50px; width: 80px; text-align: center;}"
-            +".p2p-uptime { width: 80px; text-align: center;}"
-            +".p2p-uptime2 { margin-left: 50px; width: 80px; text-align: center;}"
-            +".p2p-geo { margin-left: 55px; width: 258px; text-align: left;}"
-            +".p2p-geo2 { margin-left: 55px; width: 258px; text-align: left;}"
+            +".p2p-ip { width: 300px; text-align:left; }"
+            +".p2p-ip2 { width: 300px; text-align:left; }"
+            +".p2p-fee { width: 120px; text-align: left;}"
+            +".p2p-fee2 { width: 120px; text-align: left;}"
+            +".p2p-uptime { width: 120px; text-align: left;}"
+            +".p2p-uptime2 { width: 120px; text-align: left;}"
+            +".p2p-hashrate { width: 120px; text-align: left;}"
+            +".p2p-hashrate2 { width: 120px; text-align: left;}"
+            +".p2p-miners { width: 80px; text-align: left;}"
+            +".p2p-miners2 { width: 80px; text-align: left;}"
+            +".p2p-geo { width: 220px; text-align: left;}"
+            +".p2p-geo2 { width: 220px; text-align: left;}"
             +"img { border: none;}"
             +"</style>"
             +"</head><body>";
@@ -78,15 +82,17 @@ function Scanner(options) {
 	count = _.size(self.addr_working) - 2;
         str += "<center>Currently observing "+(self.nodes_total || "N/A")+" nodes.<br/>"+count+" nodes are public with following IPs:</center><p/>";
         str += "<div class='p2p'>";
-        str += "<div class='p2p-row p2p-caption'><div class='p2p-ip'>IPs</div><div class='p2p-fee'>Fee</div><div class='p2p-uptime'>Uptime</div><div class='p2p-geo'>Location</div>";
+        str += "<div class='p2p-row p2p-caption'><div class='p2p-ip'>IPs</div><div class='p2p-fee'>Fee</div><div class='p2p-uptime'>Uptime</div><div class='p2p-hashrate'>Hash Rate</div><div class='p2p-miners'>Miners</div><div class='p2p-geo'>Location</div>";
         str += "</div><br style='clear:both;'/>";
 
         var list = _.sortBy(_.toArray(self.addr_working), function(o) { return o.stats ? -o.stats.uptime : 0; })
 
         var row = 0;
         _.each(list, function(info) {
+            var local_hash_rate = info.local_hash_rate;
+            var miner_count = info.miner_count;
             var ip = info.ip;
-
+	    
             if (ip == '54.68.122.230') {
                 ip = 'candyp2pool-west.dprcoin.com';
             }
@@ -101,7 +107,7 @@ function Scanner(options) {
                 var uptime = info.stats ? (info.stats.uptime / 60 / 60 / 24).toFixed(1) : "N/A";
                 var fee = (info.fee || 0).toFixed(2);
 
-                str += "<div class='p2p-row "+(row++ & 1 ? "row-grey" : "")+"'><div class='p2p-ip2'><a href='http://"+ip+":6151/static/' target='_blank'>"+ip+":6151</a></div><div class='p2p-fee2'>"+fee+"%</div><div class='p2p-uptime2'>"+uptime+" days</div>";
+                str += "<div class='p2p-row "+(row++ & 1 ? "row-grey" : "")+"'><div class='p2p-ip2'><a href='http://"+ip+":6151/static/' target='_blank'>"+ip+":6151</a></div><div class='p2p-fee2'>"+fee+"%</div><div class='p2p-uptime2'>"+uptime+" days</div><div class='p2p-hashrate2'>"+(local_hash_rate/1000000).toFixed(2)+" "+config.speed_abbrev+"</div><div class='p2p-miners2'>"+miner_count+"</div>";
                 str += "<div class='p2p-geo2'>";
                 if(info.geo) {
                     str += "<a href='http://www.geoiptool.com/en/?IP="+info.ip+"' target='_blank'>"+info.geo.country+" "+"<img src='"+info.geo.img+"' align='absmiddle' border='0'/></a>";
@@ -231,6 +237,15 @@ function Scanner(options) {
                 digest_local_stats(info, function(err, stats) {
                     if(!err)
                         info.stats = stats;
+			// NewStats
+			info.miner_count = Object.keys(info.stats.miner_hash_rates).length;
+			//console.log(info.miner_count);
+			info.local_hash_rate = 0;
+			_.each(stats.miner_hash_rates, function(key) {
+				info.local_hash_rate += key;
+			});
+			//console.log(info.local_hash_rate);
+		 
                     digest_global_stats(info, function(err, stats) {
                         if(!err)
                             self.update_global_stats(stats);
