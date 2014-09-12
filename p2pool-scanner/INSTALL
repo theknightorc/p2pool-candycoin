@@ -1,0 +1,17 @@
+Ubuntu 14.0.1
+
+Requirements:
+
+./candycoind -daemon
+
+Install:
+
+apt-get install nodejs npm screen
+npm install underline
+npm install express@3.0.0
+
+Run: 
+
+screen -S scanner
+nodejs candy.js
+<ctrl>-a <ctrl>-d
