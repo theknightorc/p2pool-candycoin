@@ -69,8 +69,19 @@
       <!-- We should have a possiblity showing other miners on our node what
            happened or if we have other things to tell them. -->
       <div class="alert alert-danger">
-        <p>Sample : "cgminer -a scrypt -Q 0 -o <span class='node'></span> -u
-        Your<span class='currency'></span>PayoutAddress -p x"</p>
+<p>To connect to this P2Pool node simply point your miner at:
+       <br>
+       URL: stratum+tcp://<span class='node'></span>
+       <br>
+       Username: Your <span class='currency'></span> Payout Address
+       <br>
+       Password: Anything  
+       <br>
+       </p>
+        <p>Miner Configuration:</p> 
+        <p> (cgminer)   : "cgminer -a scrypt -o stratum+tcp://<span class='node'></span> -u Your<span class='currency'></span>PayoutAddress -p x"</p>
+        <p> (cudaminer) : "cudaminer -o stratum+tcp://<span class='node'></span> -u Your<span class='currency'></span>PayoutAddress -p none"</p>
+        <p> (cpuminer)  : "minerd -o stratum+tcp://<span class='node'></span> -u Your<span class='currency'></span>PayoutAddress -p none"</p>
       </div>
       <div class="alert alert-info hidden">
          <p>xxx</p>
