@@ -118,7 +118,8 @@ function Scanner(options) {
             }
         })
         str += "</div><p/><br/>";
-        str += "</body>"
+	str += "<p align='center'>p2pool node source : <a href='https://github.com/theknightorc/p2pool-candycoin'>https://github.com/theknightorc/p2pool-candycoin</a></p>"
+        str += "</body></html>"
         return str;
     }
 
