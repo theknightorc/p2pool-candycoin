@@ -60,7 +60,7 @@ function Geo(options) {
 
     function extract_geo_json(html) {
         json = JSON.parse(html);
-		// Cheating here. Need to find a better source for images
+        // Cheating here. Need to find a better source for images
         var img = "http://www.geoiptool.com/static/img/flags/";
         var o = {
             country : json.country_name,
@@ -74,10 +74,10 @@ function Geo(options) {
         // console.log("QUERYING IP:",ip);
         var options = {
             //host : 'www.geoiptool.com',
-			host : 'www.freegeoip.net',
+            host : 'www.freegeoip.net',
             port : 80,
             //path: '/en/?IP='+ip,
-			path: '/json/'+ip,
+            path: '/json/'+ip,
             method: 'GET'
         }
 
