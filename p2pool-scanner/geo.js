@@ -58,13 +58,26 @@ function Geo(options) {
         return o;
     }
 
+    function extract_geo_json(html) {
+        json = JSON.parse(html);
+		// Cheating here. Need to find a better source for images
+        var img = "http://www.geoiptool.com/static/img/flags/";
+        var o = {
+            country : json.country_name,
+            img : img+json.country_code.toLowerCase()+".gif"
+        }
+        return o;
+    }
+
     self.get = function(ip, callback) {
 
         // console.log("QUERYING IP:",ip);
         var options = {
-            host : 'www.geoiptool.com',
+            //host : 'www.geoiptool.com',
+			host : 'www.freegeoip.net',
             port : 80,
-            path: '/en/?IP='+ip,
+            //path: '/en/?IP='+ip,
+			path: '/json/'+ip,
             method: 'GET'
         }
 
@@ -73,7 +86,7 @@ function Geo(options) {
                 return callback(err);
             var geo = null;
             try {
-                var geo = extract_geo(response);
+                var geo = extract_geo_json(response);
                 // console.log(geo.country," ",geo.img);
             } catch(ex) {
                 console.error(ex);

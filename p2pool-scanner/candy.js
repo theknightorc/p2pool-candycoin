@@ -110,7 +110,7 @@ function Scanner(options) {
                 str += "<div class='p2p-row "+(row++ & 1 ? "row-grey" : "")+"'><div class='p2p-ip2'><a href='http://"+ip+":6151/static/' target='_blank'>"+ip+":6151</a></div><div class='p2p-fee2'>"+fee+"%</div><div class='p2p-uptime2'>"+uptime+" days</div><div class='p2p-hashrate2'>"+(local_hash_rate/1000000).toFixed(2)+" "+config.speed_abbrev+"</div><div class='p2p-miners2'>"+miner_count+"</div>";
                 str += "<div class='p2p-geo2'>";
                 if(info.geo) {
-                    str += "<a href='http://www.geoiptool.com/en/?IP="+info.ip+"' target='_blank'>"+info.geo.country+" "+"<img src='"+info.geo.img+"' align='absmiddle' border='0'/></a>";
+                    str += "<a href='http://www.freegeoip.net/?q="+info.ip+"' target='_blank'>"+info.geo.country+" "+"<img src='"+info.geo.img+"' align='absmiddle' border='0'/></a>";
                 }
                 str += "</div>";
                 str += "</div>";
