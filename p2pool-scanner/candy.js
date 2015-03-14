@@ -2,14 +2,14 @@
 var fs = require('fs'),
     http = require('http'),
     exec = require('child_process').exec,
-	_ = require('underscore'),
+  _ = require('underscore'),
     Geo = require('./geo');
 
 function dpc(t,fn) { if(typeof(t) == 'function') setTimeout(t,0); else setTimeout(fn,t); }
 
 function Scanner(options) {
 
-	var self = this;
+  var self = this;
     self.options = options;
 
     var config = eval('('+fs.readFileSync("candy.cfg",'utf8')+')');
@@ -21,8 +21,8 @@ function Scanner(options) {
 
     self.geo = new Geo({ timeout : config.http_socket_timeout });
 
-  	// -----------------------------------------
-   	// local http server interface
+    // -----------------------------------------
+     // local http server interface
     if(config.http_port)
     {
         var express = require('express');
@@ -79,7 +79,7 @@ function Scanner(options) {
         if(self.poolstats)
             str += "<center>Pool speed: "+(self.poolstats.pool_hash_rate/1000000).toFixed(2)+" "+config.speed_abbrev+"</center>";
         // Filtering none public local object 127.0.0.1 and 0.0.0.0
-	count = _.size(self.addr_working) - 2;
+  count = _.size(self.addr_working) - 2;
         str += "<center>Currently observing "+(self.nodes_total || "N/A")+" nodes.<br/>"+count+" nodes are public with following IPs:</center><p/>";
         str += "<div class='p2p'>";
         str += "<div class='p2p-row p2p-caption'><div class='p2p-ip'>IPs</div><div class='p2p-fee'>Fee</div><div class='p2p-uptime'>Uptime</div><div class='p2p-hashrate'>Hash Rate</div><div class='p2p-miners'>Miners</div><div class='p2p-geo'>Location</div>";
@@ -92,7 +92,7 @@ function Scanner(options) {
             var local_hash_rate = info.local_hash_rate;
             var miner_count = info.miner_count;
             var ip = info.ip;
-	    
+      
             if (ip == '54.68.122.230') {
                 ip = 'candyp2pool-west.dprcoin.com';
             }
@@ -118,7 +118,7 @@ function Scanner(options) {
             }
         })
         str += "</div><p/><br/>";
-	str += "<p align='center'>p2pool node source : <a href='https://github.com/theknightorc/p2pool-candycoin'>https://github.com/theknightorc/p2pool-candycoin</a></p>"
+  str += "<p align='center'>p2pool node source : <a href='https://github.com/theknightorc/p2pool-candycoin'>https://github.com/theknightorc/p2pool-candycoin</a></p>"
         str += "</body></html>"
         return str;
     }
@@ -166,7 +166,7 @@ function Scanner(options) {
                         // if we can read p2pool addr file, also add our pre-collected IPs
                         // if(filename != config.init_file) {
                             var init_addr = JSON.parse(fs.readFileSync(config.init_file, 'utf8'));
-				self.inject(init_addr);
+        self.inject(init_addr);
                         //}
 
                         for(var i = 0; i < (config.probe_N_IPs_simultaneously || 1); i++)
@@ -204,7 +204,7 @@ function Scanner(options) {
         _.each(addr_list, function(info) {
             var ip = info[0][0];
             var port = info[0][1];
-		// Block 127.0.0.1
+    // Block 127.0.0.1
             if(!self.addr_digested[ip] && !self.addr_pending[ip]) {
                 self.addr_pending[ip] = { ip : ip, port : port }
             }
@@ -237,16 +237,26 @@ function Scanner(options) {
 
                 digest_local_stats(info, function(err, stats) {
                     if(!err)
-                        info.stats = stats;
-			// NewStats
-			info.miner_count = Object.keys(info.stats.miner_hash_rates).length;
-			//console.log(info.miner_count);
-			info.local_hash_rate = 0;
-			_.each(stats.miner_hash_rates, function(key) {
-				info.local_hash_rate += key;
-			});
-			//console.log(info.local_hash_rate);
-		 
+                        if(stats)
+                            info.stats = stats;
+                            console.log(info.stats);
+                            //console.log(info.miner_count);
+                            // NewStats
+                            if(info.stats.miner_hash_rates)
+                                info.miner_count = Object.keys(info.stats.miner_hash_rates).length;
+                                //console.log(info.miner_count);
+                            else
+                                info.miner_count = 0;
+                                //console.log(info.miner_count);
+                            info.local_hash_rate = 0;
+                            if(info.stats.miner_hash_rates) 
+                                _.each(info.stats.miner_hash_rates, function(key) {
+                                    info.local_hash_rate += key;
+                                });
+                            console.log("Local Hash Rate:", info.local_hash_rate);
+                            console.log("Miner Count: ", info.miner_count);
+                            //console.log(info.local_hash_rate);
+
                     digest_global_stats(info, function(err, stats) {
                         if(!err)
                             self.update_global_stats(stats);
